@@ -94,7 +94,7 @@ class Period: ObservableObject, Identifiable, Codable, Equatable {
     
     var wrappedLength: CGFloat {
         get {
-            let length = endTime.timeIntervalSince(startTime) / 60
+            let length = startTime.timeIntervalSince(endTime) / 60
             return CGFloat(length)
         }
     }

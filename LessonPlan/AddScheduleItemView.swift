@@ -41,7 +41,7 @@ struct AddScheduleItemView: View {
                     
                     self.presentationMode.wrappedValue.dismiss()
                 }
-                .disabled(subject.isEmpty || planDetails.isEmpty)
+                .disabled(subject.isEmpty)
                 
                 Button("Cancel") {
                     self.presentationMode.wrappedValue.dismiss()

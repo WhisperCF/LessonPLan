@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ScheduleView: View {
     @EnvironmentObject var currentState: CurrentState
+    @Environment(\.presentationMode) var presentation
     
     @StateObject var schedule = Schedule()
     @State private var showingAddScreen = false
@@ -21,37 +22,40 @@ struct ScheduleView: View {
                 if (filteredSchedule.isEmpty) {
                     Text("Nothing Scheduled Yet")
                 }
-                LazyVGrid(columns: columns) {
-                    ForEach(filteredSchedule) { period in
-                        NavigationLink(destination: PeriodView(period: period, schedule: schedule)) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .frame(height: max(110, period.wrappedLength * 2.5))
-                                    .foregroundColor(period.color)
-                                    .padding(.horizontal)
-                                    .opacity(0.5)
-                                VStack(alignment:.leading) {
-                                    Text(period.subject)
-                                        .foregroundColor(.primary)
-                                        .font(.title2)
-                                        .fontWeight(.bold)
-                                    Text(period.timeSummary)
-                                        .foregroundColor(.primary)
-                                        .font(.subheadline)
-                                    Text(period.planDetails)
-                                        .foregroundColor(.primary)
-                                        .font(.subheadline)
-                                        .frame(maxWidth:.infinity, idealHeight: period.wrappedLength, alignment:.topLeading)
-                                        .multilineTextAlignment(.leading)
+                GeometryReader { geo in
+                    LazyVGrid(columns: columns) {
+                        ForEach(filteredSchedule) { period in
+                            NavigationLink(destination: PeriodView(period: period, schedule: schedule)) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 25)
+                                        .frame(height: max(110, period.wrappedLength * 2.5))
+                                        .foregroundColor(period.color)
+                                        .padding(.horizontal)
+                                        .opacity(0.5)
+                                    VStack(alignment:.leading) {
+                                        Text(period.subject)
+                                            .foregroundColor(.primary)
+                                            .font(.title2)
+                                            .fontWeight(.bold)
+                                        Text(period.timeSummary)
+                                            .foregroundColor(.primary)
+                                            .font(.subheadline)
+                                        Text(period.planDetails)
+                                            .foregroundColor(.primary)
+                                            .font(.subheadline)
+                                            .frame(maxWidth:.infinity, idealHeight: period.wrappedLength, alignment:.topLeading)
+                                            .multilineTextAlignment(.leading)
+                                    }
+                                    .padding(30)
                                 }
-                                .padding(30)
-                            }
-                            .onAppear {
-                                schedule.save()
+                                .onAppear {
+                                    schedule.save()
+                                }
                             }
                         }
                     }
                 }
+                
             }
         }
         .toolbar {
@@ -62,9 +66,13 @@ struct ScheduleView: View {
                     Image(systemName: "plus")
                 })
             }
-//            ToolbarItem(placement: .navigationBarLeading) {
-//                EditButton()
-//            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Image(systemName: "chevron.backward")
+                    .foregroundColor(.blue)
+                    .onTapGesture {
+                        self.presentation.wrappedValue.dismiss()
+                }
+            }
         }
         .sheet(isPresented: $showingAddScreen) {
             AddScheduleItemView(schedule: schedule)

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct DaysView: View {
     
     @EnvironmentObject var currentState: CurrentState
@@ -36,7 +38,7 @@ struct DaysView: View {
                                             .foregroundColor(.blue)
                                             .frame(width: circleSize )
                                             .scaleEffect(sizeModifier)
-                                            .animation(.easeOut(duration: 0.2), value: sizeModifier)
+                                            .animation(.easeInOut(duration: 1), value: sizeModifier)
                                             
                                         Text("\(day)")
                                             .foregroundColor(.white)
@@ -56,11 +58,10 @@ struct DaysView: View {
                                 .onChange(of: currentState.selectedDay) { newValue in
                                     date = newValue
                                     update()
-                                    sizeModifier = 1
                                 }
                                 .onTapGesture {
-                                    selectDay(day)
                                     sizeModifier = 1
+                                    selectDay(day)
                                 }
 
                             }
@@ -68,7 +69,7 @@ struct DaysView: View {
                         .padding(.horizontal)
                         .onChange(of:selectedDay) { action in
                             value.scrollTo(selectedDay)
-                            sizeModifier += 0.4
+                            sizeModifier = 1.4
                         }
                     }
                 }

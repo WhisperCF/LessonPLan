@@ -27,7 +27,7 @@ struct PeriodView: View {
                     
                     self.presentationMode.wrappedValue.dismiss()
                 }
-                .disabled(period.subject.isEmpty || period.planDetails.isEmpty)
+                .disabled(period.subject.isEmpty)
             }
             Section {
                 Button(role: .destructive) {
