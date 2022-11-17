@@ -17,9 +17,7 @@ struct ContentView: View {
             SidebarView()
                 .environmentObject(currentState)
             StackScheduleView()
-                .navigationTitle("Schedule")
                 .environmentObject(currentState)
-
 
         }
 

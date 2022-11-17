@@ -24,9 +24,9 @@ struct DaysView: View {
     var body: some View {
         Group {
             VStack {
-                Text(month)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+//                Text(month)
+//                    .font(.subheadline)
+//                    .fontWeight(.semibold)
                 
                 ScrollView(.horizontal) {
                     ScrollViewReader { value in
@@ -38,7 +38,7 @@ struct DaysView: View {
                                             .foregroundColor(.blue)
                                             .frame(width: circleSize )
                                             .scaleEffect(sizeModifier)
-                                            .animation(.easeInOut(duration: 1), value: sizeModifier)
+                                            .animation(.easeInOut(duration: 0.3), value: sizeModifier)
                                             
                                         Text("\(day)")
                                             .foregroundColor(.white)

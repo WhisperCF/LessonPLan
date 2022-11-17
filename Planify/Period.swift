@@ -14,24 +14,117 @@ enum SortingKey {
     case startTime
 }
 
+
+let containerIdentifier = "iCloud.net.applewriter.planify";
+
 @MainActor class Schedule: ObservableObject {
     @Published private(set) var periods: [Period]
     let saveKey = "SavedData"
     var currentSortKey = SortingKey.startTime
+    var usingiCloud = true
+    var fm = FileManager.default
+    var iCloudToken: (any NSCoding & NSCopying & NSObjectProtocol)?
+    var iCloudQuery: NSMetadataQuery
+    
+    var iCloudSavePath: URL?
+        
+
     
     init() {
+        
+        let nc = NotificationCenter.default
+        
+        var filename: URL
         
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let baseURL = paths[0]
         
+        filename = baseURL.appendingPathComponent(saveKey)
+        iCloudToken = fm.ubiquityIdentityToken
+        
+        if usingiCloud && iCloudToken != nil {
+            
+            //if let containerUrl = fm.url(forUbiquityContainerIdentifier: containerIdentifier)?.appendingPathComponent("Documents/") {
+                
+                let fileUrl =  fm.url(forUbiquityContainerIdentifier: containerIdentifier)?.appendingPathComponent(saveKey)
+                
+                iCloudSavePath = fileUrl
+                
+
+           // }
+            
+            if let iCloudURL = iCloudSavePath {
+                filename = iCloudURL
+                
+                if !FileManager.default.fileExists(atPath: filename.path, isDirectory: nil) {
+                    do {
+                        try fm.createDirectory(at: filename, withIntermediateDirectories: true, attributes: nil)
+                    }
+                    catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            
+            do {
+                try fm.startDownloadingUbiquitousItem(at: filename)
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        }
+
+
         do {
-            let filename = baseURL.appendingPathComponent(saveKey)
             let data = try Data(contentsOf: filename)
+            //print(String(data: data, encoding: .utf8))
             periods = try JSONDecoder().decode([Period].self, from: data)
         } catch {
-            print("Unable to load data.")
+            print("Unable to load data. \(error.localizedDescription)")
             self.periods = []
         }
+        
+        iCloudQuery = NSMetadataQuery()
+        iCloudQuery.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+        let predicate = NSPredicate(format: "%K like '*'", NSMetadataItemFSNameKey)
+        iCloudQuery.predicate = predicate
+        
+        let started = iCloudQuery.start()
+        
+        if !started {
+            print("there was a problem...")
+        }
+        
+        nc.addObserver(self, selector: #selector(updateFromCloud), name: NSNotification.Name.NSMetadataQueryDidUpdate, object: nil)
+        nc.addObserver(self, selector: #selector(updateFromCloud), name: NSNotification.Name.NSMetadataQueryDidFinishGathering, object: nil)
+        
+    }
+    
+    @objc func updateFromCloud() {
+        
+        iCloudQuery.stop()
+        
+        if let filename = iCloudSavePath {
+            do {
+                let data = try Data(contentsOf: filename)
+                //print(String(data: data, encoding: .utf8))
+                periods = try JSONDecoder().decode([Period].self, from: data)
+            } catch {
+                print("iCloud Update Error. \(error.localizedDescription)")
+            }
+        }
+        
+        iCloudQuery = NSMetadataQuery()
+        iCloudQuery.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
+        let predicate = NSPredicate(format: "%K like '*'", NSMetadataItemFSNameKey)
+        iCloudQuery.predicate = predicate
+        
+        let started = iCloudQuery.start()
+        
+        if !started {
+            print("there was a problem...")
+        }
+        
     }
     
     func sortBy(_ key: SortingKey) {
@@ -64,16 +157,35 @@ enum SortingKey {
     }
     
     func save() {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let baseURL = paths[0]
-        
+
         do {
-            let filename = baseURL.appendingPathComponent(saveKey)
+            var filename: URL
+            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            let baseURL = paths[0]
+            filename = baseURL.appendingPathComponent(saveKey)
+            
             let data = try JSONEncoder().encode(periods)
-            try data.write(to: filename, options: [.atomicWrite, .completeFileProtection])
+            
+            if usingiCloud {
+                if let iCloudPath = iCloudSavePath {
+                    try data.write(to: iCloudPath)
+                }
+            } else {
+                try data.write(to: filename, options: [.atomicWrite])
+            }
+
+            if usingiCloud && fm.fileExists(atPath: filename.absoluteString) {
+                do {
+                    try fm.setUbiquitous(true, itemAt: filename, destinationURL: iCloudSavePath!)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
         } catch {
-            print("Unable to save data.")
+            print("Unable to save data: \(error.localizedDescription)")
         }
+        
 
     }
     
@@ -94,7 +206,7 @@ class Period: ObservableObject, Identifiable, Codable, Equatable {
     
     var wrappedLength: CGFloat {
         get {
-            let length = startTime.timeIntervalSince(endTime) / 60
+            let length = endTime.timeIntervalSince(startTime) / 60
             return CGFloat(length)
         }
     }

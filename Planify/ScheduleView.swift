@@ -10,20 +10,23 @@ import SwiftUI
 struct ScheduleView: View {
     @EnvironmentObject var currentState: CurrentState
     @Environment(\.presentationMode) var presentation
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     @StateObject var schedule = Schedule()
     @State private var showingAddScreen = false
+    @State private var contentSize: CGSize = .zero
     let columns = [GridItem(spacing: 0, alignment:.topLeading)]
     
     var body: some View {
         
         Group {
-            ScrollView {
-                if (filteredSchedule.isEmpty) {
-                    Text("Nothing Scheduled Yet")
-                }
-                GeometryReader { geo in
-                    LazyVGrid(columns: columns) {
+            
+            if (filteredSchedule.isEmpty) {
+                Text("Nothing Scheduled Yet")
+            }
+            GeometryReader { geo in
+                ScrollView {
+                    VStack() {
                         ForEach(filteredSchedule) { period in
                             NavigationLink(destination: PeriodView(period: period, schedule: schedule)) {
                                 ZStack {
@@ -55,7 +58,6 @@ struct ScheduleView: View {
                         }
                     }
                 }
-                
             }
         }
         .toolbar {
@@ -67,10 +69,12 @@ struct ScheduleView: View {
                 })
             }
             ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "chevron.backward")
-                    .foregroundColor(.blue)
-                    .onTapGesture {
-                        self.presentation.wrappedValue.dismiss()
+                if horizontalSizeClass == .compact {
+                    Image(systemName: "chevron.backward")
+                        .foregroundColor(.blue)
+                        .onTapGesture {
+                            self.presentation.wrappedValue.dismiss()
+                        }
                 }
             }
         }
@@ -79,6 +83,8 @@ struct ScheduleView: View {
         }
         .navigationBarBackButtonHidden(true)
     }
+    
+
     
     var filteredSchedule : [Period] {
         let date = currentState.selectedDay

@@ -22,7 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		896D835627A84F11000A2181 /* Lesson Plan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lesson Plan.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		89128255291F01D9006FB5C9 /* Planify.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Planify.entitlements; sourceTree = "<group>"; };
+		89517F572925AFA400994B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		896D835627A84F11000A2181 /* Planify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		896D835927A84F11000A2181 /* LessonPlanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonPlanApp.swift; sourceTree = "<group>"; };
 		896D835B27A84F11000A2181 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		896D835D27A84F12000A2181 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,7 +53,8 @@
 		896D834D27A84F11000A2181 = {
 			isa = PBXGroup;
 			children = (
-				896D835827A84F11000A2181 /* LessonPlan */,
+				89128255291F01D9006FB5C9 /* Planify.entitlements */,
+				896D835827A84F11000A2181 /* Planify */,
 				896D835727A84F11000A2181 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,14 +62,15 @@
 		896D835727A84F11000A2181 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				896D835627A84F11000A2181 /* Lesson Plan.app */,
+				896D835627A84F11000A2181 /* Planify.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		896D835827A84F11000A2181 /* LessonPlan */ = {
+		896D835827A84F11000A2181 /* Planify */ = {
 			isa = PBXGroup;
 			children = (
+				89517F572925AFA400994B21 /* Info.plist */,
 				896D835927A84F11000A2181 /* LessonPlanApp.swift */,
 				896D835B27A84F11000A2181 /* ContentView.swift */,
 				89ADDE1D27A9DD2B0023D644 /* SidebarView.swift */,
@@ -80,7 +84,7 @@
 				896D835D27A84F12000A2181 /* Assets.xcassets */,
 				896D835F27A84F12000A2181 /* Preview Content */,
 			);
-			path = LessonPlan;
+			path = Planify;
 			sourceTree = "<group>";
 		};
 		896D835F27A84F12000A2181 /* Preview Content */ = {
@@ -108,7 +112,7 @@
 			);
 			name = Planify;
 			productName = Planify;
-			productReference = 896D835627A84F11000A2181 /* Lesson Plan.app */;
+			productReference = 896D835627A84F11000A2181 /* Planify.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -126,7 +130,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 896D835127A84F11000A2181 /* Build configuration list for PBXProject "LessonPlan" */;
+			buildConfigurationList = 896D835127A84F11000A2181 /* Build configuration list for PBXProject "Planify" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -298,12 +302,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Planify.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LessonPlan/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 25;
+				DEVELOPMENT_ASSET_PATHS = "\"Planify/Preview Content\"";
 				DEVELOPMENT_TEAM = W3BZ66Q856;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Planify/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Planify;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -314,8 +322,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.cf.lesson-plan";
-				PRODUCT_NAME = "Lesson Plan";
+				PRODUCT_BUNDLE_IDENTIFIER = net.applewriter.planify;
+				PRODUCT_NAME = Planify;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -327,12 +338,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Planify.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LessonPlan/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 25;
+				DEVELOPMENT_ASSET_PATHS = "\"Planify/Preview Content\"";
 				DEVELOPMENT_TEAM = W3BZ66Q856;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Planify/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Planify;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -343,8 +358,11 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.cf.lesson-plan";
-				PRODUCT_NAME = "Lesson Plan";
+				PRODUCT_BUNDLE_IDENTIFIER = net.applewriter.planify;
+				PRODUCT_NAME = Planify;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -354,7 +372,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		896D835127A84F11000A2181 /* Build configuration list for PBXProject "LessonPlan" */ = {
+		896D835127A84F11000A2181 /* Build configuration list for PBXProject "Planify" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				896D836227A84F12000A2181 /* Debug */,
